@@ -38,7 +38,13 @@ function postChangePassword( payload){
   .then( checkStatus)
   .then( parseJSON);
 }
-
+function yelpGet( payload){
+  return fetch( '/apo/yelp?'+Object.keys(payload)
+    .map( k => `${k}=${encodeURIComponent(payload[k])}`)
+    .join( "&")
+  ).then( checkStatus)
+  .then( parseJSON);
+}
 function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
     return response;
@@ -54,5 +60,6 @@ function parseJSON(response) {
   return response.json();
 }
 
-const Actions = { postSignup, postLogin, postChangePassword};
+const Actions = { postSignup, postLogin, postChangePassword,
+                  yelpGet};
 export default Actions;
