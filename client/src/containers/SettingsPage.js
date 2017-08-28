@@ -37,8 +37,13 @@ export default class SettingsPage extends React.Component {
   };
   render = () => {
     return (
+      <div className="container">
+        <h1>Settings Page</h1>
+        <div>Name&nbsp;{Auth.getUsername()}</div>
+        <div>Email&nbsp;{Auth.getEmail()}</div>
         <SettingsForm onSubmit={this.processForm} onChange={this.changeUser}
           user={this.state.user} errors={this.state.errors} />
+      </div>
     );
   };
 }
