@@ -15,20 +15,20 @@ export default class SettingsForm extends React.Component {
         <form action="/" onSubmit={onSubmit} >
           <h2>Change Password</h2>
           {errors.summary && <p className="error-message">{errors.summary}</p>}
-          <label>Current Password
+          <div>Current Password
             <div className="error-wrap">
               {errors.password && <p className="error-field">{errors.password}</p>}
               <input type="password" name="password"
                 value={user.password} onChange={onChange} />
             </div>
-          </label>
-          <label>New Password
+          </div>
+          <div>New Password
             <div className="error-wrap">
               {errors.new_password && <p className="error-field">{errors.new_password}</p>}
               <input type="password" name="new_password"
                 value={user.new_password} onChange={onChange} />
             </div>
-          </label>
+          </div>
           <div style={{margin:"10px"}}>
             <button type="submit" >Submit</button>
           </div>
