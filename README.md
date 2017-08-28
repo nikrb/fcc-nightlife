@@ -1,6 +1,17 @@
 fcc project nighlife coordination app
 
-create a base for react authentication.
+# User Stories
+1. As an unauthenticated user, I can view all bars in my area.
+2. As an authenticated user, I can add myself to a bar to indicate I am going there tonight.
+3. As an authenticated user, I can remove myself from a bar if I no longer want to go there.
+4. As an unauthenticated user, when I login I should not have to search again
+
+## Acknowledgements
+### Libs
+MIT License  Copyright (c) 2016 Kristen Kehlenbeck  [yelp-api-v3](https://www.npmjs.com/package/yelp-api-v3)
+
+### Boilerplate
+Based on nikrb/auth-react-base
 
 * node.js
 * react.js
