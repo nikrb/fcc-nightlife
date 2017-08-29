@@ -6,7 +6,7 @@ const router = new express.Router();
 router.get('/yelp', (req, res) => {
   yelp.search({})
   .then(function (data) {
-    res.send( {success: true, data});
+    res.send( {success: true, data: JSON.parse(data)});
   })
   .catch(function (err) {
       console.error(err);
