@@ -9,5 +9,8 @@ const yelp = new Yelp({
 const search = ( {term="food", location="90210", price="1,2,3", limit=3}) => {
   return yelp.search( {term,location, price, limit });
 };
+const reviews = ( id) => {
+  return yelp.reviews( id);
+};
 
-module.exports = {search};
+module.exports = {search, reviews};
