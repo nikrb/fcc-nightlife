@@ -1966,7 +1966,7 @@ repeating@^2.0.0:
   dependencies:
     is-finite "^1.0.0"
 
-request@^2.65.0, request@^2.74.0, request@^2.81.0:
+request@^2.65.0, request@^2.81.0:
   version "2.81.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.81.0.tgz#c6928946a0e06c5f8d6f8a9333469ffda46298a0"
   dependencies:
@@ -2434,9 +2434,3 @@ xdg-basedir@^2.0.0:
 xtend@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/xtend/-/xtend-4.0.1.tgz#a5c6d532be656e23db820efb943a1f04998d63af"
-
-yelp-api-v3@^1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/yelp-api-v3/-/yelp-api-v3-1.5.0.tgz#fc2048ed6a628561ad62ec4cd79f15c724699464"
-  dependencies:
-    request "^2.74.0"
