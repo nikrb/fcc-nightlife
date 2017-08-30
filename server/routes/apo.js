@@ -6,18 +6,27 @@ const router = new express.Router();
 router.get('/yelp', (req, res) => {
   yelp.search({})
   .then( (result) => {
-    // console.log( result);
+    const promises = [];
     result.jsonBody.businesses.forEach( (b,i) => {
-      yelp.reviews( b.id)
-      .then( (rev) => {
-        b.reviews = rev.jsonBody.reviews;
-        // const data = result.jsonBody;
-        // data.businesses[0].reviews = rev.jsonBody.reviews;
-        // console.log( rev);
-        if( i === result.jsonBody.businesses.length-1){
-          res.send( {success:true, data: result.jsonBody});
-        }
+      const p = new Promise( (resolve,reject) => {
+        yelp.reviews( b.id)
+        .then( (rev) => {
+          b.reviews = rev.jsonBody.reviews;
+          resolve( b);
+        })
+        .catch( (e) => {
+          reject( e);
+        });
       });
+      promises.push( p);
+    });
+    Promise.all( promises)
+    .then( (data) => {
+      // console.log( data);
+      res.send( {success:true, data});
+    })
+    .catch( (e) => {
+      res.send( {success:false, e});
     });
   })
   // .then(function (data) {

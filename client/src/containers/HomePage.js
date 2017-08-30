@@ -11,7 +11,7 @@ export default class HomePage extends React.Component {
     Actions.yelpGet({})
     .then( (response) => {
       console.log( "yelp get response:", response);
-      this.setState( { businesses: response.data.businesses});
+      this.setState( { businesses: response.data});
     });
   };
   onBusinessClick = ( name) => {
