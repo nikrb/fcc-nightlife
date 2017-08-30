@@ -32,10 +32,14 @@ export default class HomePage extends React.Component {
       const lis = {...listyle,
         color: this.state.highlighted_item === b.name?"darkgrey":"black"
       };
+      let desc = "";
+      if( b.reviews){
+        desc = b.reviews[0].text;
+      }
       return (
         <ListItem key={i} style={lis} onItemClick={this.onBusinessClick} text={b.name}
             onMouseEnter={this.onListItemEnter} onMouseLeave={this.onListItemLeave}
-            image_url={b.image_url} />
+            image_url={b.image_url} description={desc} />
       );
     });
     return (

@@ -27,7 +27,9 @@ export default class ListItem extends React.Component {
       <li style={this.props.style} onClick={this.clicked}
         onMouseEnter={this.onMouseEnter}
         onMouseLeave={this.props.onMouseLeave}>
+        <img style={{width:"64px"}} src={this.props.image_url} alt='img' />
         {this.props.text}
+        <p>{this.props.description}</p>
       </li>
     );
   };
