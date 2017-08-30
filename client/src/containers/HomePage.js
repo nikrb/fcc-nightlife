@@ -55,9 +55,18 @@ export default class HomePage extends React.Component {
       cursor: "pointer",
       width: "80%"
     };
+    const mag = {
+      transform: "rotate(-45deg)",
+    };
     return (
       <div className="App">
         <h1>Who's Where?</h1>
+        <div>
+          <input />
+          <button type="button" >
+            <div style={mag}>&#x26B2;</div>
+          </button>
+        </div>
         <div style={style}>
           {bs}
         </div>
