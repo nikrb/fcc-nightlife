@@ -15,7 +15,7 @@ export default class HomePage extends React.Component {
     });
   };
   onBusinessClick = ( name) => {
-
+    console.log( "business clicked:", name);
   };
   onListItemEnter = (e, name) => {
     this.setState( {highlighted_item: name})
@@ -23,14 +23,16 @@ export default class HomePage extends React.Component {
   onListItemLeave = () => {
     this.setState( { highlighted_item: false});
   };
+  onGoingClick = (name) => {
+    console.log( "going clicked:", name);
+  };
+  onSearchClick = (e) => {
+    console.log( "on going clicked for :", e.target.value);
+  };
   render = () => {
     const listyle = {
       listStyle: "none",
       padding: "0.2em"
-    };
-    const going_style = {
-      fontSize:"0.8em",
-
     };
     const bs = this.state.businesses.map( (b,i)=> {
       const lis = {...listyle,
@@ -44,10 +46,8 @@ export default class HomePage extends React.Component {
       return (
         <BusinessCard key={i} style={lis} onItemClick={this.onBusinessClick} text={b.name}
             onMouseEnter={this.onListItemEnter} onMouseLeave={this.onListItemLeave}
-            image_url={b.image_url} description={desc} >
-          <button type="button" style={going_style}>
-            ({b.going} going)
-          </button>
+            image_url={b.image_url} description={desc}
+            going={b.going} onGoingClick={this.onGoingClick} >
         </BusinessCard>
       );
     });
@@ -63,7 +63,7 @@ export default class HomePage extends React.Component {
         <h1>Who's Where?</h1>
         <div>
           <input />
-          <button type="button" >
+          <button type="button" onClick={this.onSearchClick} >
             <div style={mag}>&#x26B2;</div>
           </button>
         </div>

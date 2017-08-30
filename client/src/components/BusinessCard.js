@@ -7,13 +7,15 @@ usage:
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export default class ListItem extends React.Component {
+export default class BusinessCard extends React.Component {
   static propTypes = {
     style: PropTypes.object,
     onItemClick: PropTypes.func,
     text: PropTypes.string.isRequired,
     description: PropTypes.string,
     image_url: PropTypes.string,
+    going: PropTypes.number,
+    onGoingClick: PropTypes.func,
     onMouseEnter: PropTypes.func,
     onMouseLeave: PropTypes.func
   };
@@ -24,6 +26,10 @@ export default class ListItem extends React.Component {
     if( this.props.onMouseEnter){
       this.props.onMouseEnter( e, this.props.text);
     }
+  };
+  onGoingClick = (e) => {
+    e.stopPropagation();
+    this.props.onGoingClick( e.target.name);
   };
   render = () => {
     const style = {...this.props.style,
@@ -38,6 +44,10 @@ export default class ListItem extends React.Component {
       fontStyle: "italic",
       marginLeft: "10px"
     };
+    const going_style = {
+      fontSize:"0.8em",
+    };
+
     return (
       <div style={style} onClick={this.clicked}
         onMouseEnter={this.onMouseEnter}
@@ -47,7 +57,11 @@ export default class ListItem extends React.Component {
         </div>
         <div style={detail_style}>
           <div>
-            {this.props.text} {this.props.children}
+            {this.props.text}
+            <button type="button" style={going_style} name={this.props.text}
+              onClick={this.onGoingClick}>
+              ({this.props.going} going)
+            </button>
           </div>
           <div style={desc_style}>{this.props.description}</div>
         </div>
