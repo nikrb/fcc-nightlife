@@ -47,13 +47,18 @@ export default class BusinessCard extends React.Component {
     const going_style = {
       fontSize:"0.8em",
     };
-
+    let image_style = {
+      width: "64px",
+    };
+    if( !this.props.image_url){
+      image_style.backgroundColor = "lightgrey";
+    }
     return (
       <div style={style} onClick={this.clicked}
         onMouseEnter={this.onMouseEnter}
         onMouseLeave={this.props.onMouseLeave}>
-        <div>
-          <img style={{width:"64px"}} src={this.props.image_url} alt='img' />
+        <div style={image_style}>
+          <img style={{width:"64px"}} src={this.props.image_url} alt='' />
         </div>
         <div style={detail_style}>
           <div>
