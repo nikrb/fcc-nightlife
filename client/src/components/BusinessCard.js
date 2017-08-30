@@ -33,11 +33,6 @@ export default class ListItem extends React.Component {
     const detail_style ={
       marginLeft: "10px"
     };
-    const title_style ={
-      display: "flex",
-      flexDirection: "row",
-      alignItem: "flex-end"
-    };
     const desc_style = {
       fontSize: "0.8em",
       fontStyle: "italic",
