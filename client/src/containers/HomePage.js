@@ -1,5 +1,5 @@
 import React from 'react';
-import ListItem from '../components/ListItem';
+import BusinessCard from '../components/BusinessCard';
 import Actions from './Actions';
 
 export default class HomePage extends React.Component {
@@ -28,6 +28,10 @@ export default class HomePage extends React.Component {
       listStyle: "none",
       padding: "0.2em"
     };
+    const going_style = {
+      fontSize:"0.8em",
+
+    };
     const bs = this.state.businesses.map( (b,i)=> {
       const lis = {...listyle,
         color: this.state.highlighted_item === b.name?"darkgrey":"black"
@@ -36,18 +40,27 @@ export default class HomePage extends React.Component {
       if( b.reviews){
         desc = b.reviews[0].text;
       }
+      b.going = 0;
       return (
-        <ListItem key={i} style={lis} onItemClick={this.onBusinessClick} text={b.name}
+        <BusinessCard key={i} style={lis} onItemClick={this.onBusinessClick} text={b.name}
             onMouseEnter={this.onListItemEnter} onMouseLeave={this.onListItemLeave}
-            image_url={b.image_url} description={desc} />
+            image_url={b.image_url} description={desc} >
+          <button type="button" style={going_style}>
+            ({b.going} going)
+          </button>
+        </BusinessCard>
       );
     });
+    const style = {
+      cursor: "pointer",
+      width: "80%"
+    };
     return (
       <div className="App">
         <h1>Who's Where?</h1>
-        <ul>
+        <div style={style}>
           {bs}
-        </ul>
+        </div>
       </div>
     );
   };
