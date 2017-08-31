@@ -1,10 +1,12 @@
 const express = require('express');
+const Bar = require( 'mongoose').model('Bar');
 const yelp = require( '../models/MY.js');
 
 const router = new express.Router();
 
 router.get('/yelp', (req, res) => {
-  const {location,term} = req.query;
+  const {location,term,user_email} = req.query;
+  console.log( "user email:", user_email);
   yelp.search({location,term})
   .then( (result) => {
     const promises = [];
@@ -13,7 +15,19 @@ router.get('/yelp', (req, res) => {
         yelp.reviews( b.id)
         .then( (rev) => {
           b.reviews = rev.jsonBody.reviews;
-          resolve( b);
+          Bar.findOne( {id: b.id}, (err,bar) => {
+            if( err) {
+              console.error( `bar[${b.id}] not found`);
+            } else {
+              if( bar){
+                b.going = bar.going.length;
+                b.is_going = bar.going.reduce( (acc,c) => {
+                  return (c.email === user_email?true:acc);
+                }, false);
+              }
+            }
+            resolve( b);
+          });
         })
         .catch( (e) => {
           reject( e);
@@ -36,6 +50,13 @@ router.get('/yelp', (req, res) => {
   .catch(function (err) {
       console.error(err);
       res.send( { success: false, err});
+  });
+});
+
+router.get( '/going', (req,res) => {
+  const bar_id = req.body;
+  Bar.findOne( {_id, bar_id}, function( err, bar){
+    res.json( {success:true, going:bar.going.length});
   });
 });
 

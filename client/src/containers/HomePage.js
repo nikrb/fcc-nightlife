@@ -1,6 +1,7 @@
 import React from 'react';
 import BusinessCard from '../components/BusinessCard';
 import Actions from './Actions';
+import Auth from '../modules/Auth';
 
 export default class HomePage extends React.Component {
   state = {
@@ -15,33 +16,56 @@ export default class HomePage extends React.Component {
     const location = window.localStorage.getItem( "location_text");
     console.log( term, location);
     if( term || location){
+      let user_email = 0;
+      if( Auth.isUserAuthenticated()){
+        user_email = Auth.getEmail();
+      }
       this.setState( {term_text:term, location_text: location});
-      this.fetchLocation( {term, location});
+      this.fetchLocation( {term, location, user_email});
     }
   };
   fetchLocation = ( search_query) => {
     let pl = {};
     if( search_query.term.length) pl.term = search_query.term;
     if( search_query.location.length) pl.location = search_query.location;
+    if( search_query.user_email) pl.user_email = search_query.user_email;
     Actions.yelpGet( pl)
     .then( (response) => {
       console.log( "yelp get response:", response);
       this.setState( { businesses: response.data});
     });
   };
-  onBusinessClick = ( name) => {
-    console.log( "business clicked:", name);
-    const bus = this.state.businesses.filter( b => b.name === name);
-    window.open( bus[0].url);
+  findBusiness = (bar_id) => {
+    const bar = this.state.businesses.filter( b => b.id === bar_id);
+    return bar[0];
   };
-  onListItemEnter = (e, name) => {
-    this.setState( {highlighted_item: name})
+  onBusinessClick = ( bar_id) => {
+    console.log( "business clicked:", bar_id);
+    window.open( this.findBusiness(bar_id).url);
+  };
+  onListItemEnter = (e, bar_id) => {
+    this.setState( {highlighted_item: bar_id})
   };
   onListItemLeave = () => {
     this.setState( { highlighted_item: false});
   };
-  onGoingClick = (name) => {
-    console.log( "going clicked:", name);
+  onGoingClick = (bar_id) => {
+    console.log( "going clicked:", bar_id);
+    const user_email = Auth.getEmail();
+    Actions.postGoing( {bar_id, user_email})
+    .then( (response) => {
+      console.log( "post going response:", response);
+      const bars = this.state.businesses.map( (b) => {
+        let nb = b;
+        if( b.id === bar_id){
+          const g = b.going || [];
+          const going = g.concat( {email: user_email, name: Auth.getUsername()});
+          nb = {...b, going};
+        }
+        return nb;
+      });
+      this.setState( {businesses: bars});
+    });
   };
   onTermTextChange = (e) => {
     this.setState( {term_text: e.target.value})
@@ -54,7 +78,11 @@ export default class HomePage extends React.Component {
     const {term_text, location_text} = this.state;
     window.localStorage.setItem('term_text', term_text);
     window.localStorage.setItem('location_text', location_text);
-    this.fetchLocation( {term:term_text, location:location_text});
+    let user_email = 0;
+    if( Auth.isUserAuthenticated()){
+      user_email = Auth.getEmail();
+    }
+    this.fetchLocation( {term:term_text, location:location_text, user_email});
   };
   render = () => {
     const listyle = {
@@ -63,19 +91,22 @@ export default class HomePage extends React.Component {
     };
     const bs = this.state.businesses.map( (b,i)=> {
       const lis = {...listyle,
-        color: this.state.highlighted_item === b.name?"darkgrey":"black"
+        color: this.state.highlighted_item === b.id?"darkgrey":"black"
       };
       let desc = "";
       if( b.reviews){
         desc = b.reviews[0].text;
       }
-      b.going = 0;
+      const going = b.going?b.going:0;
+      const is_going = b.is_going?true:false;
       return (
-        <BusinessCard key={i} style={lis} onItemClick={this.onBusinessClick} text={b.name}
-            onMouseEnter={this.onListItemEnter} onMouseLeave={this.onListItemLeave}
+        <BusinessCard key={i} style={lis} bar_id={b.id}  text={b.name}
+            onItemClick={this.onBusinessClick}
+            onMouseEnter={this.onListItemEnter}
+            onMouseLeave={this.onListItemLeave}
+            onGoingClick={this.onGoingClick}
             image_url={b.image_url} description={desc}
-            going={b.going} onGoingClick={this.onGoingClick} >
-        </BusinessCard>
+            going={going} is_going={is_going} />
       );
     });
     const style = {
@@ -99,6 +130,9 @@ export default class HomePage extends React.Component {
           <button type="button" onClick={this.onSearchClick} >
             <div style={mag}>&#x26B2;</div>
           </button>
+        </div>
+        <div style={{fontSize:"0.8em"}}>
+          A tomato coloured going button indicates you are going
         </div>
         <div style={style}>
           {bs}

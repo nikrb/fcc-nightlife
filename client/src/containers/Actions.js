@@ -1,3 +1,4 @@
+import Auth from '../modules/Auth';
 
 function postSignup( payload){
   return fetch( '/auth/signup', {
@@ -45,6 +46,19 @@ function yelpGet( payload){
   ).then( checkStatus)
   .then( parseJSON);
 }
+function postGoing( payload){
+  return fetch( '/api/going', {
+    method: 'post',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': `bearer ${Auth.getToken()}`
+    },
+    body: JSON.stringify( payload)
+  })
+  .then( checkStatus)
+  .then( parseJSON);
+}
 function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
     return response;
@@ -61,5 +75,5 @@ function parseJSON(response) {
 }
 
 const Actions = { postSignup, postLogin, postChangePassword,
-                  yelpGet};
+                  yelpGet, postGoing };
 export default Actions;

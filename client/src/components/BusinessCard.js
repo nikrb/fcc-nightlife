@@ -11,6 +11,7 @@ export default class BusinessCard extends React.Component {
   static propTypes = {
     style: PropTypes.object,
     onItemClick: PropTypes.func,
+    bar_id: PropTypes.string,
     text: PropTypes.string.isRequired,
     description: PropTypes.string,
     image_url: PropTypes.string,
@@ -20,16 +21,16 @@ export default class BusinessCard extends React.Component {
     onMouseLeave: PropTypes.func
   };
   clicked = () => {
-    this.props.onItemClick( this.props.text);
+    this.props.onItemClick( this.props.bar_id);
   };
   onMouseEnter = (e) => {
     if( this.props.onMouseEnter){
-      this.props.onMouseEnter( e, this.props.text);
+      this.props.onMouseEnter( e, this.props.bar_id);
     }
   };
   onGoingClick = (e) => {
     e.stopPropagation();
-    this.props.onGoingClick( e.target.name);
+    this.props.onGoingClick( this.props.bar_id);
   };
   render = () => {
     const style = {...this.props.style,
@@ -44,9 +45,10 @@ export default class BusinessCard extends React.Component {
       fontStyle: "italic",
       marginLeft: "10px"
     };
-    const going_style = {
+    let going_style = {
       fontSize:"0.8em",
     };
+    if( this.props.is_going) going_style.background = "tomato";
     let image_style = {
       width: "64px",
     };
@@ -63,7 +65,7 @@ export default class BusinessCard extends React.Component {
         <div style={detail_style}>
           <div>
             {this.props.text}
-            <button type="button" style={going_style} name={this.props.text}
+            <button type="button" style={going_style}
               onClick={this.onGoingClick}>
               ({this.props.going} going)
             </button>
