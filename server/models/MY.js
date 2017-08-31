@@ -6,13 +6,12 @@ Yelp.accessToken( process.env.yelp_app_id, process.env.yelp_app_secret)
   access_token = response.jsonBody.access_token;
 });
 
-const search = ( {term="food", location="90210", price="1,2,3", limit=3}) => {
+const search = ( {term="food",location="90210", limit=3}) => {
   if( access_token){
+    console.log( term, location);
     const client = Yelp.client( access_token);
     return client.search( {
-      term: "food",
-      location:"90210",
-      limit: 3
+      term, location, limit
     });
   } else {
     console.error( "no access_token");

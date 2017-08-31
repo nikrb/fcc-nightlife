@@ -4,7 +4,8 @@ const yelp = require( '../models/MY.js');
 const router = new express.Router();
 
 router.get('/yelp', (req, res) => {
-  yelp.search({})
+  const {location,term} = req.query;
+  yelp.search({location,term})
   .then( (result) => {
     const promises = [];
     result.jsonBody.businesses.forEach( (b,i) => {
