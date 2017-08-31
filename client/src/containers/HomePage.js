@@ -63,8 +63,7 @@ export default class HomePage extends React.Component {
         .then( (response) => {
           console.log( "delete going response:", response);
           if( response.success){
-            const going = bar.going.filter( b => b.id !== bar_id);
-            const nb = {...bar, going};
+            const nb = {...bar, going: bar.going-1, is_going: false};
             const bus = this.state.businesses.map( (b) => {
               if( b.id === bar_id){
                 return nb;
@@ -73,6 +72,8 @@ export default class HomePage extends React.Component {
               }
             });
             this.setState( {businesses: bus});
+          } else {
+            console.error( "delete going failed", response);
           }
         });
       } else {
@@ -82,9 +83,7 @@ export default class HomePage extends React.Component {
           const bars = this.state.businesses.map( (b) => {
             let nb = b;
             if( b.id === bar_id){
-              const g = b.going || [];
-              const going = g.concat( {email: user_email});
-              nb = {...b, going};
+              nb = {...b, going:b.going+1};
             }
             return nb;
           });
