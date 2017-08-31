@@ -46,6 +46,19 @@ function yelpGet( payload){
   ).then( checkStatus)
   .then( parseJSON);
 }
+function deleteGoing( payload){
+  return fetch( '/api/going', {
+    method: 'delete',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': `bearer ${Auth.getToken()}`
+    },
+    body: JSON.stringify( payload)
+  })
+  .then( checkStatus)
+  .then( parseJSON);
+}
 function postGoing( payload){
   return fetch( '/api/going', {
     method: 'post',
@@ -75,5 +88,5 @@ function parseJSON(response) {
 }
 
 const Actions = { postSignup, postLogin, postChangePassword,
-                  yelpGet, postGoing };
+                  yelpGet, postGoing, deleteGoing };
 export default Actions;

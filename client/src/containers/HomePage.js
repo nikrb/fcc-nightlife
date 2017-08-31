@@ -55,21 +55,43 @@ export default class HomePage extends React.Component {
   };
   onGoingClick = (bar_id) => {
     console.log( "going clicked:", bar_id);
-    const user_email = Auth.getEmail();
-    Actions.postGoing( {bar_id, user_email})
-    .then( (response) => {
-      console.log( "post going response:", response);
-      const bars = this.state.businesses.map( (b) => {
-        let nb = b;
-        if( b.id === bar_id){
-          const g = b.going || [];
-          const going = g.concat( {email: user_email, name: Auth.getUsername()});
-          nb = {...b, going};
-        }
-        return nb;
-      });
-      this.setState( {businesses: bars});
-    });
+    if( Auth.isUserAuthenticated()){
+      const user_email = Auth.getEmail();
+      const bar = this.findBusiness(bar_id);
+      if( bar.is_going){
+        Actions.deleteGoing( {bar_id, user_email})
+        .then( (response) => {
+          console.log( "delete going response:", response);
+          if( response.success){
+            const going = bar.going.filter( b => b.id !== bar_id);
+            const nb = {...bar, going};
+            const bus = this.state.businesses.map( (b) => {
+              if( b.id === bar_id){
+                return nb;
+              } else {
+                return b;
+              }
+            });
+            this.setState( {businesses: bus});
+          }
+        });
+      } else {
+        Actions.postGoing( {bar_id, user_email})
+        .then( (response) => {
+          console.log( "post going response:", response);
+          const bars = this.state.businesses.map( (b) => {
+            let nb = b;
+            if( b.id === bar_id){
+              const g = b.going || [];
+              const going = g.concat( {email: user_email});
+              nb = {...b, going};
+            }
+            return nb;
+          });
+          this.setState( {businesses: bars});
+        });
+      }
+    }
   };
   onTermTextChange = (e) => {
     this.setState( {term_text: e.target.value})
