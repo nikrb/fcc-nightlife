@@ -16,13 +16,17 @@ export default class HomePage extends React.Component {
     const location = window.localStorage.getItem( "location_text");
     console.log( term, location);
     if( term || location){
-      let user_email = 0;
-      if( Auth.isUserAuthenticated()){
-        user_email = Auth.getEmail();
-      }
+      const user_email = this.getAuthUserEmail();
       this.setState( {term_text:term, location_text: location});
       this.fetchLocation( {term, location, user_email});
     }
+  };
+  getAuthUserEmail = () => {
+    let user_email = 0;
+    if( Auth.isUserAuthenticated()){
+      user_email = Auth.getEmail();
+    }
+    return user_email;
   };
   fetchLocation = ( search_query) => {
     let pl = {};
@@ -78,10 +82,7 @@ export default class HomePage extends React.Component {
     const {term_text, location_text} = this.state;
     window.localStorage.setItem('term_text', term_text);
     window.localStorage.setItem('location_text', location_text);
-    let user_email = 0;
-    if( Auth.isUserAuthenticated()){
-      user_email = Auth.getEmail();
-    }
+    const user_email = this.getAuthUserEmail();
     this.fetchLocation( {term:term_text, location:location_text, user_email});
   };
   render = () => {
