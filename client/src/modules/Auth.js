@@ -9,6 +9,7 @@ const isUserAuthenticated = () => {
 const deauthenticateUser = () => {
   localStorage.removeItem( 'token');
   localStorage.removeItem( 'name');
+  localStorage.removeItem( 'email');
 };
 const getToken = () => {
   return localStorage.getItem( 'token');
