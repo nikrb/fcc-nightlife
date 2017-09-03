@@ -3,6 +3,7 @@ import BusinessCard from '../components/BusinessCard';
 import Pager from '../components/Pager';
 import Actions from './Actions';
 import Auth from '../modules/Auth';
+import Loader from '../components/Loader';
 
 export default class HomePage extends React.Component {
   state = {
@@ -14,7 +15,8 @@ export default class HomePage extends React.Component {
     // max rows from yelp
     limit: 3,
     current_page_no: 0,
-    total_rows: 0
+    total_rows: 0,
+    is_loading: false
   };
   componentWillMount = () => {
     const term = window.localStorage.getItem( "term_text");
@@ -37,6 +39,7 @@ export default class HomePage extends React.Component {
     this.fetchLocation( {term:term_text, location: location_text, page_no});
   };
   fetchLocation = ( search_query) => {
+    this.setState( {is_loading:true});
     const {limit} = this.state;
     const {page_no} = search_query;
     const offset = page_no*limit;
@@ -49,7 +52,7 @@ export default class HomePage extends React.Component {
     .then( (response) => {
       console.log( "yelp get response:", response);
       this.setState( { businesses: response.data, current_page_no: page_no,
-        total_rows: response.total});
+        total_rows: response.total, is_loading:false});
     });
   };
   findBusiness = (bar_id) => {
@@ -160,6 +163,9 @@ export default class HomePage extends React.Component {
     };
     const search_style = { margin:"0"};
     const small_text = {fontSize:"0.8em"};
+    const page_wrapper = {
+      margin: "32px"
+    };
     return (
       <div className="App">
         <h1>Who's Where?</h1>
@@ -181,17 +187,25 @@ export default class HomePage extends React.Component {
         <div style={small_text}>
           A tomato coloured going button indicates you are going
         </div>
-        {this.state.total_rows?
-          <Pager handlePageSelect={this.handlePageSelected} page_no={this.state.current_page_no}
-            total_rows={this.state.total_rows} display_count={this.state.limit} />
-          : null
-        }
+        <div style={page_wrapper}>
+          { this.state.is_loading?
+            <Loader />
+            :
+            this.state.total_rows?
+              <Pager handlePageSelect={this.handlePageSelected} page_no={this.state.current_page_no}
+                total_rows={this.state.total_rows} display_count={this.state.limit} />
+              : null
+          }
+        </div>
         <div style={card_style}>
           {bs}
         </div>
         {this.state.total_rows?
-          <Pager handlePageSelect={this.handlePageSelected} page_no={this.state.current_page_no}
-            total_rows={this.state.total_rows} display_count={this.state.limit} />
+          this.state.is_loading?
+            <Loader />
+            :
+            <Pager handlePageSelect={this.handlePageSelected} page_no={this.state.current_page_no}
+              total_rows={this.state.total_rows} display_count={this.state.limit} />
           :null
         }
       </div>
