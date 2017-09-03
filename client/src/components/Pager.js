@@ -37,10 +37,11 @@ export default class Pager extends React.Component {
     const wrapper = {
       display: "flex",
       flexDirection: "row",
-      flexWrap: "wrap",
-      margin: "10px 0"
+      flexWrap: "wrap"
     };
     const btn = {
+      margin: "0px 5px",
+      padding: "0px 5px",
       fontSize: "1em",
       backgroundColor: "rgba( 64,64,192,0.5)",
       borderRadius: "10px"
