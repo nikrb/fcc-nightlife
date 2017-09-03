@@ -86,21 +86,27 @@ export default class HomePage extends React.Component {
             });
             this.setState( {businesses: bus});
           } else {
-            console.error( "delete going failed", response);
+            console.error( "delete going failed:", response);
           }
         });
       } else {
         Actions.postGoing( {bar_id, user_email})
         .then( (response) => {
-          console.log( "post going response:", response);
-          const bars = this.state.businesses.map( (b) => {
-            let nb = b;
-            if( b.id === bar_id){
-              nb = {...b, going:b.going+1, is_going: true};
-            }
-            return nb;
-          });
-          this.setState( {businesses: bars});
+          console.log( "bar [%s] post going response:", bar_id, response);
+          if( response.success){
+            const bars = this.state.businesses.map( (b) => {
+              let nb = b;
+              if( b.id === bar_id){
+                console.log( "found bar going:", b.going);
+                const going = b.going?b.going+1:1;
+                nb = {...b, going, is_going: true};
+              }
+              return nb;
+            });
+            this.setState( {businesses: bars});
+          } else {
+            console.error( "post going failed:", response);
+          }
         });
       }
     }
@@ -153,9 +159,14 @@ export default class HomePage extends React.Component {
       transform: "rotate(-45deg)",
     };
     const search_style = { margin:"0"};
+    const small_text = {fontSize:"0.8em"};
     return (
       <div className="App">
         <h1>Who's Where?</h1>
+        <div style={small_text}>
+          Powered by <a href="https://www.yelp.com/developers/documentation/v3"
+                        rel="noopener noreferrer" target="_blank">yelp</a>
+        </div>
         <div>
           Find&nbsp;
           <input style={search_style} type="text" onChange={this.onTermTextChange}
@@ -167,7 +178,7 @@ export default class HomePage extends React.Component {
             <div style={mag}>&#x26B2;</div>
           </button>
         </div>
-        <div style={{fontSize:"0.8em"}}>
+        <div style={small_text}>
           A tomato coloured going button indicates you are going
         </div>
         {this.state.total_rows?
