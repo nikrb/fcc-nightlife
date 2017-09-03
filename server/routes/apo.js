@@ -5,11 +5,14 @@ const yelp = require( '../models/MY.js');
 const router = new express.Router();
 
 router.get('/yelp', (req, res) => {
-  const {location,term,user_email} = req.query;
+  const {location,term,user_email, limit, offset} = req.query;
   console.log( "user email:", user_email);
-  yelp.search({location,term})
+  console.log( "limit and offset:", limit, offset);
+  let total = 0;
+  yelp.search({location,term,limit,offset})
   .then( (result) => {
     const promises = [];
+    total = result.jsonBody.total;
     result.jsonBody.businesses.forEach( (b,i) => {
       const p = new Promise( (resolve,reject) => {
         yelp.reviews( b.id)
@@ -38,7 +41,7 @@ router.get('/yelp', (req, res) => {
     Promise.all( promises)
     .then( (data) => {
       // console.log( data);
-      res.send( {success:true, data});
+      res.send( {success:true, data, total});
     })
     .catch( (e) => {
       res.send( {success:false, e});

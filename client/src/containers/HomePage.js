@@ -1,5 +1,6 @@
 import React from 'react';
 import BusinessCard from '../components/BusinessCard';
+import Pager from '../components/Pager';
 import Actions from './Actions';
 import Auth from '../modules/Auth';
 
@@ -10,33 +11,45 @@ export default class HomePage extends React.Component {
     // search for something near somewhere
     term_text: "",
     location_text: "",
+    // max rows from yelp
+    limit: 3,
+    current_page_no: 0,
+    total_rows: 0
   };
   componentWillMount = () => {
     const term = window.localStorage.getItem( "term_text");
     const location = window.localStorage.getItem( "location_text");
     console.log( term, location);
     if( term || location){
-      const user_email = this.getAuthUserEmail();
       this.setState( {term_text:term, location_text: location});
-      this.fetchLocation( {term, location, user_email});
+      this.fetchLocation( {term, location, page_no:0});
     }
   };
   getAuthUserEmail = () => {
-    let user_email = 0;
+    let user_email = "";
     if( Auth.isUserAuthenticated()){
       user_email = Auth.getEmail();
     }
     return user_email;
   };
+  handlePageSelected = ( page_no) => {
+    const {term_text,location_text} = this.state;
+    this.fetchLocation( {term:term_text, location: location_text, page_no});
+  };
   fetchLocation = ( search_query) => {
-    let pl = {};
+    const {limit} = this.state;
+    const {page_no} = search_query;
+    const offset = page_no*limit;
+
+    let pl = {limit, offset, user_email:this.getAuthUserEmail()};
     if( search_query.term.length) pl.term = search_query.term;
     if( search_query.location.length) pl.location = search_query.location;
-    if( search_query.user_email) pl.user_email = search_query.user_email;
+    console.log( "yelp get query:", pl);
     Actions.yelpGet( pl)
     .then( (response) => {
       console.log( "yelp get response:", response);
-      this.setState( { businesses: response.data});
+      this.setState( { businesses: response.data, current_page_no: page_no,
+        total_rows: response.total});
     });
   };
   findBusiness = (bar_id) => {
@@ -104,7 +117,8 @@ export default class HomePage extends React.Component {
     window.localStorage.setItem('term_text', term_text);
     window.localStorage.setItem('location_text', location_text);
     const user_email = this.getAuthUserEmail();
-    this.fetchLocation( {term:term_text, location:location_text, user_email});
+    this.fetchLocation( {term:term_text, location:location_text,
+      user_email, page_no: 0});
   };
   render = () => {
     const listyle = {
@@ -159,6 +173,8 @@ export default class HomePage extends React.Component {
         <div style={style}>
           {bs}
         </div>
+        <Pager handlePageSelect={this.handlePageSelected} page_no={this.state.current_page_no}
+          total_rows={this.state.total_rows} display_count={this.state.limit} />
       </div>
     );
   };
