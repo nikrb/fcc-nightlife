@@ -67,7 +67,7 @@ export default class BusinessCard extends React.Component {
             {this.props.text}
             <button type="button" style={going_style}
               onClick={this.onGoingClick}>
-              ({this.props.going} going)
+              {this.props.going} going
             </button>
           </div>
           <div style={desc_style}>{this.props.description}</div>
