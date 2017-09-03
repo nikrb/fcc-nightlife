@@ -96,7 +96,7 @@ export default class HomePage extends React.Component {
           const bars = this.state.businesses.map( (b) => {
             let nb = b;
             if( b.id === bar_id){
-              nb = {...b, going:b.going+1};
+              nb = {...b, going:b.going+1, is_going: true};
             }
             return nb;
           });
@@ -170,13 +170,19 @@ export default class HomePage extends React.Component {
         <div style={{fontSize:"0.8em"}}>
           A tomato coloured going button indicates you are going
         </div>
-        <Pager handlePageSelect={this.handlePageSelected} page_no={this.state.current_page_no}
-          total_rows={this.state.total_rows} display_count={this.state.limit} />
+        {this.state.total_rows?
+          <Pager handlePageSelect={this.handlePageSelected} page_no={this.state.current_page_no}
+            total_rows={this.state.total_rows} display_count={this.state.limit} />
+          : null
+        }
         <div style={card_style}>
           {bs}
         </div>
-        <Pager handlePageSelect={this.handlePageSelected} page_no={this.state.current_page_no}
-          total_rows={this.state.total_rows} display_count={this.state.limit} />
+        {this.state.total_rows?
+          <Pager handlePageSelect={this.handlePageSelected} page_no={this.state.current_page_no}
+            total_rows={this.state.total_rows} display_count={this.state.limit} />
+          :null
+        }
       </div>
     );
   };
