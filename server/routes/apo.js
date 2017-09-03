@@ -33,7 +33,10 @@ router.get('/yelp', (req, res) => {
           });
         })
         .catch( (e) => {
-          reject( e);
+          // reject( e);
+          console.error( "get reviews failed:", e.response.body);
+          b.reviews = [{text:"No reviews yet"}];
+          resolve( b);
         });
       });
       promises.push( p);
