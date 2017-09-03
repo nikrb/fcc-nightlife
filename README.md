@@ -10,6 +10,9 @@ fcc project nighlife coordination app
 ### Libs
 MIT License  Copyright (c) 2016 Kristen Kehlenbeck  [yelp-api-v3](https://www.npmjs.com/package/yelp-api-v3)
 
+### Loader
+Loader gif from [loadergenerator.com](http://loadergenerator.com/)
+
 ### Boilerplate
 Based on nikrb/auth-react-base
 
