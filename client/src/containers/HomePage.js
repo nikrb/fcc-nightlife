@@ -145,7 +145,7 @@ export default class HomePage extends React.Component {
             going={going} is_going={is_going} />
       );
     });
-    const style = {
+    const card_style = {
       cursor: "pointer",
       width: "80%"
     };
@@ -170,7 +170,9 @@ export default class HomePage extends React.Component {
         <div style={{fontSize:"0.8em"}}>
           A tomato coloured going button indicates you are going
         </div>
-        <div style={style}>
+        <Pager handlePageSelect={this.handlePageSelected} page_no={this.state.current_page_no}
+          total_rows={this.state.total_rows} display_count={this.state.limit} />
+        <div style={card_style}>
           {bs}
         </div>
         <Pager handlePageSelect={this.handlePageSelected} page_no={this.state.current_page_no}
