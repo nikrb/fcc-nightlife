@@ -134,7 +134,7 @@ export default class HomePage extends React.Component {
       listStyle: "none",
       padding: "0.2em"
     };
-    const bs = this.state.businesses.map( (b,i)=> {
+    const business_cards = this.state.businesses.map( (b,i)=> {
       const lis = {...listyle,
         color: this.state.highlighted_item === b.id?"darkgrey":"black"
       };
@@ -198,7 +198,7 @@ export default class HomePage extends React.Component {
           }
         </div>
         <div style={card_style}>
-          {bs}
+          {business_cards}
         </div>
         {this.state.total_rows?
           this.state.is_loading?
