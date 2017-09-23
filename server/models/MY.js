@@ -4,6 +4,9 @@ let access_token = 0;
 Yelp.accessToken( process.env.yelp_app_id, process.env.yelp_app_secret)
 .then( (response) => {
   access_token = response.jsonBody.access_token;
+})
+.catch( (err) => {
+  console.error( "my yelp access token failed:", err);
 });
 
 const search = ( {term="food",location="90210", limit=3, offset=0}) => {
@@ -13,7 +16,7 @@ const search = ( {term="food",location="90210", limit=3, offset=0}) => {
     return client.search( { term, location, limit, offset });
   } else {
     console.error( "no access_token");
-    process.exit(1);
+    
   }
 };
 const reviews = ( id) => {

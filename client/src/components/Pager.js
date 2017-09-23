@@ -1,5 +1,14 @@
+/**
+usage:
+
+  <Pager handlePageSelect={this.handlePageSelected} page_no={this.state.current_page_no}
+    total_rows={this.state.total_rows} display_count={this.state.limit}
+    is_loading={this.state.is_loading} />
+    
+**/
 import React from 'react';
 import PropTypes from 'prop-types';
+import loader from '../images/loader.gif';
 
 export default class Pager extends React.Component {
   static propTypes = {
@@ -37,7 +46,8 @@ export default class Pager extends React.Component {
     const wrapper = {
       display: "flex",
       flexDirection: "row",
-      flexWrap: "wrap"
+      flexWrap: "wrap",
+      margin: "1em auto"
     };
     const btn = {
       margin: "0px 5px",
@@ -71,35 +81,35 @@ export default class Pager extends React.Component {
           </button>
       );
     }
-    // const numbered_page_buttons = Array.from({length: total_pages>10?10:total_pages}, (v, i) => {
-    //   return (
-    //     <button key={i} type="button" style={btn} onClick={this.handleClick}
-    //       disabled={this.props.page_no === i}  value={i} >
-    //       {i+1}
-    //     </button>
-    //   );
-    // });
     const left_arrow = String.fromCharCode( 9664);
     const right_arrow = String.fromCharCode( 9654);
     return (
       <div style={wrapper}>
-        <button type="button" style={btn} onClick={this.handleClick}
-          value='first_page' disabled={this.props.page_no === 0} >
-            {left_arrow+left_arrow}
-        </button>
-        <button type="button" style={btn} onClick={this.handleClick}
-          value='prev_page' disabled={this.props.page_no === 0} >
-            {left_arrow}
-        </button>
-        {numbered_page_buttons}
-        <button type="button" style={btn} onClick={this.handleClick}
-          value='next_page' disabled={this.props.page_no === total_pages-1} >
-            {right_arrow}
-        </button>
-        <button type="button" style={btn} onClick={this.handleClick}
-          value='last_page' disabled={this.props.page_no === total_pages-1} >
-            {right_arrow}{right_arrow}
-        </button>
+        { this.props.total_rows?
+            this.props.is_loading?
+            <img src={loader} alt="loading..." />
+            :
+            <div>
+              <button type="button" style={btn} onClick={this.handleClick}
+                value='first_page' disabled={this.props.page_no === 0} >
+                  {left_arrow+left_arrow}
+              </button>
+              <button type="button" style={btn} onClick={this.handleClick}
+                value='prev_page' disabled={this.props.page_no === 0} >
+                  {left_arrow}
+              </button>
+              {numbered_page_buttons}
+              <button type="button" style={btn} onClick={this.handleClick}
+                value='next_page' disabled={this.props.page_no === total_pages-1} >
+                  {right_arrow}
+              </button>
+              <button type="button" style={btn} onClick={this.handleClick}
+                value='last_page' disabled={this.props.page_no === total_pages-1} >
+                  {right_arrow}{right_arrow}
+              </button>
+            </div>
+          :null
+        }
       </div>
     );
   };

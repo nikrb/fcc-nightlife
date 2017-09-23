@@ -1,12 +1,13 @@
 import React from 'react';
+import {Redirect} from 'react-router-dom';
 import BusinessCard from '../components/BusinessCard';
 import Pager from '../components/Pager';
 import Actions from './Actions';
 import Auth from '../modules/Auth';
-import Loader from '../components/Loader';
 
 export default class HomePage extends React.Component {
   state = {
+    redirectToLogin: false,
     businesses: [],
     highlighted_item: "",
     // search for something near somewhere
@@ -112,6 +113,8 @@ export default class HomePage extends React.Component {
           }
         });
       }
+    } else {
+      this.setState( {redirectToLogin: true});
     }
   };
   onTermTextChange = (e) => {
@@ -130,6 +133,9 @@ export default class HomePage extends React.Component {
       user_email, page_no: 0});
   };
   render = () => {
+    if( this.state.redirectToLogin){
+      return <Redirect to="/login" />;
+    }
     const listyle = {
       listStyle: "none",
       padding: "0.2em"
@@ -163,9 +169,6 @@ export default class HomePage extends React.Component {
     };
     const search_style = { margin:"0"};
     const small_text = {fontSize:"0.8em"};
-    const page_wrapper = {
-      margin: "32px"
-    };
     return (
       <div className="App">
         <h1>Who's Where?</h1>
@@ -187,27 +190,15 @@ export default class HomePage extends React.Component {
         <div style={small_text}>
           A tomato coloured going button indicates you are going
         </div>
-        <div style={page_wrapper}>
-          { this.state.is_loading?
-            <Loader />
-            :
-            this.state.total_rows?
-              <Pager handlePageSelect={this.handlePageSelected} page_no={this.state.current_page_no}
-                total_rows={this.state.total_rows} display_count={this.state.limit} />
-              : null
-          }
-        </div>
+        <Pager handlePageSelect={this.handlePageSelected} page_no={this.state.current_page_no}
+          total_rows={this.state.total_rows} display_count={this.state.limit}
+          is_loading={this.state.is_loading}/>
         <div style={card_style}>
           {business_cards}
         </div>
-        {this.state.total_rows?
-          this.state.is_loading?
-            <Loader />
-            :
-            <Pager handlePageSelect={this.handlePageSelected} page_no={this.state.current_page_no}
-              total_rows={this.state.total_rows} display_count={this.state.limit} />
-          :null
-        }
+        <Pager handlePageSelect={this.handlePageSelected} page_no={this.state.current_page_no}
+          total_rows={this.state.total_rows} display_count={this.state.limit}
+          is_loading={this.state.is_loading}/>
       </div>
     );
   };
