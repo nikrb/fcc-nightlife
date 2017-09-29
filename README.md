@@ -1,4 +1,4 @@
-fcc project nighlife coordination app [demo](https://fcc-nightlife-knik.c9users.io/)
+fcc project nighlife coordination app [demo](https://knik-fcc-nightlife.herokuapp.com)
 
 # User Stories
 1. As an unauthenticated user, I can view all bars in my area.
