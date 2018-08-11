@@ -8,6 +8,6 @@ const BarSchema = new mongoose.Schema({
   going: {
     type: [{ email: String}]
   }
-});
+}, { usePushEach: true });
 
 module.exports = mongoose.model('Bar', BarSchema);
